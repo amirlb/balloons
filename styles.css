@@ -55,6 +55,9 @@ body, html {
   position: absolute;
   display: inline-block;
   cursor: pointer;
+  pointer-events: none;
+  left: 102vw;
+  height: 30vh;
   animation-name: drift-sideways;
   animation-timing-function: linear;
   animation-fill-mode: forwards;
@@ -104,7 +107,7 @@ body, html {
 .balloon svg path.string {
   fill: none;
   stroke: black;
-  stroke-width: 2px;
+  stroke-width: 1.5px;
 }
 
 /* Pop animation */
@@ -124,5 +127,16 @@ body, html {
 }
 
 .balloon.pop {
-  animation: pop 0.3s linear forwards !important;
-} 
+  animation-name: pop;
+  animation-duration: 0.3s !important;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+.balloon.pop svg path {
+  stroke-opacity: 0;
+  transition-duration: 0.2s;
+}
+
+.balloon svg g {
+  pointer-events: auto;
+}

@@ -8,32 +8,34 @@ function spawnBalloon() {
   // Random color and position
   const color = colors[Math.floor(Math.random() * colors.length)];
   // Insert SVG balloon with cone knot, highlight, and wiggly string
+  const scale = 0.7 + Math.random() * 0.3;
   balloon.innerHTML = `
     <svg viewBox="0 0 100 160" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <radialGradient id="hl" cx="40%" cy="40%" r="40%">
           <stop offset="0%" stop-color="white" stop-opacity="0.6"/>
           <stop offset="10%" stop-color="white" stop-opacity="0.55"/>
-            <stop offset="75%" stop-color="white" stop-opacity="0.05"/>
+          <stop offset="75%" stop-color="white" stop-opacity="0.05"/>
           <stop offset="100%" stop-color="white" stop-opacity="0.0"/>
         </radialGradient>
       </defs>
-      <!-- balloon body -->
-      <path d="M50,5 C80,5 95,40 95,80 C95,120 70,140 50,155 C30,140 5,120 5,80 C5,40 20,5 50,5 Z M45,155 L55,155 L50,165 Z" fill="${color}"/>
-      <!-- highlight -->
-      <ellipse class="highlight" cx="45" cy="60" rx="35" ry="50" fill="url(#hl)"/>
-      <!-- wiggly string -->
-      <path class="string" d="M50,165 C48,185 52,205 50,225 C48,245 52,265 50,285"/>
+      <g transform="translate(${(scale-1) * 50}, ${(scale-1) * 150})">
+        <!-- wiggly string -->
+        <path class="string" d="M50,150 C48,170 52,190 50,210 C48,230 52,250 50,270"/>
+        <!-- knot -->
+        <path d="M 50,145 C 55,145,60,150,60,155 C 60,160,52,155,50,155 C 48,155,40,160,40,155 C 40,150,45,145,50,145" fill="${color}"/>
+      </g>
+      <g transform="scale(${scale})">
+        <!-- balloon body -->
+        <path d="M 50,150 C 60,150,95,120,95,70 A 45,65,0,0,0,5,70 C 5,120,40,150,50,150" fill="${color}"/>
+        <!-- highlight -->
+        <ellipse class="highlight" cx="45" cy="60" rx="35" ry="50" fill="url(#hl)"/>
+      </g>
     </svg>`;
-  // Random size between 20vh and 30vh, and set dimensions
-  const size = 20 + Math.random() * 10; // vh
-  balloon.style.height = size + 'vh';
   // width is auto to maintain SVG aspect ratio and be responsive
   // Random vertical position within viewport
-  const y = 5 + Math.random() * (85 - size);
+  const y = 5 + Math.random() * 50;
   balloon.style.top = y + 'vh';
-  // Start off-screen right and drift horizontally leftwards
-  balloon.style.left = '102vw';
 
   // Random animation duration (slower)
   const duration = 20 + Math.random() * 20; // seconds
@@ -45,23 +47,19 @@ function spawnBalloon() {
   });
 
   // Pop balloon only when clicking on actual SVG shapes
-  const shapes = balloon.querySelectorAll('svg path, svg ellipse');
-  shapes.forEach(shape => {
-    shape.addEventListener('click', (e) => {
-      e.stopPropagation();
-      // Play pop sound
-      const popSound = document.getElementById('popSound');
-      if (popSound) {
-        popSound.currentTime = 0;
-        popSound.play();
-      }
-      // Freeze current position by capturing bounding box and applying inline styles
-      const rect = balloon.getBoundingClientRect();
-      balloon.style.left = rect.left + 'px';
-      balloon.style.top = rect.top + 'px';
-      // Pop balloon
-      balloon.classList.add('pop');
-    });
+  balloon.addEventListener('click', (e) => {
+    // Play pop sound
+    const popSound = document.getElementById('popSound');
+    if (popSound) {
+      popSound.currentTime = 0;
+      popSound.play();
+    }
+    // Freeze current position by capturing bounding box and applying inline styles
+    const rect = balloon.getBoundingClientRect();
+    balloon.style.left = rect.left + 'px';
+    balloon.style.top = rect.top + 'px';
+    // Pop balloon
+    balloon.classList.add('pop');
   });
 
   container.appendChild(balloon);
