@@ -44,9 +44,24 @@ function spawnBalloon() {
     balloon.remove();
   });
 
-  // Pop balloon on click
-  balloon.addEventListener('click', () => {
-    balloon.remove();
+  // Pop balloon only when clicking on actual SVG shapes
+  const shapes = balloon.querySelectorAll('svg path, svg ellipse');
+  shapes.forEach(shape => {
+    shape.addEventListener('click', (e) => {
+      e.stopPropagation();
+      // Play pop sound
+      const popSound = document.getElementById('popSound');
+      if (popSound) {
+        popSound.currentTime = 0;
+        popSound.play();
+      }
+      // Freeze current position by capturing bounding box and applying inline styles
+      const rect = balloon.getBoundingClientRect();
+      balloon.style.left = rect.left + 'px';
+      balloon.style.top = rect.top + 'px';
+      // Pop balloon
+      balloon.classList.add('pop');
+    });
   });
 
   container.appendChild(balloon);
