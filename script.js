@@ -10,7 +10,7 @@ function spawnBalloon() {
   // Insert SVG balloon with cone knot, highlight, and wiggly string
   const scale = 0.7 + Math.random() * 0.3;
   balloon.innerHTML = `
-    <svg viewBox="0 0 100 160" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <radialGradient id="hl" cx="40%" cy="40%" r="40%">
           <stop offset="0%" stop-color="white" stop-opacity="0.6"/>
@@ -71,24 +71,36 @@ setInterval(spawnBalloon, 2000);
 // Initial balloon
 spawnBalloon();
 
-// Background music toggle button
+// Background music toggle switch
 const bgMusic = document.getElementById('bgMusic');
-const bgToggleBtn = document.getElementById('bgMusicToggle');
-if (bgMusic && bgToggleBtn) {
-  const SOUND_ON = '🔊';
-  const SOUND_OFF = '🔇';
-  // Initialize button state
-  bgToggleBtn.textContent = bgMusic.paused ? SOUND_OFF : SOUND_ON;
-  bgToggleBtn.setAttribute('aria-pressed', (!bgMusic.paused).toString());
-  bgToggleBtn.addEventListener('click', () => {
-    if (bgMusic.paused) {
-      bgMusic.play();
-      bgToggleBtn.textContent = SOUND_ON;
-      bgToggleBtn.setAttribute('aria-pressed', 'true');
-    } else {
-      bgMusic.pause();
-      bgToggleBtn.textContent = SOUND_OFF;
-      bgToggleBtn.setAttribute('aria-pressed', 'false');
+const bgToggleInput = document.getElementById('bgMusicToggle');
+// Initialize from localStorage (default on)
+const stored = localStorage.getItem('bgMusicPlaying');
+const shouldPlay = stored === null || stored === 'true';
+bgToggleInput.checked = shouldPlay;
+if (shouldPlay) {
+  bgMusic.play().catch(() => {});
+} else {
+  bgMusic.pause();
+}
+// Toggle music on change
+bgToggleInput.addEventListener('change', () => {
+  if (bgToggleInput.checked) {
+    bgMusic.play();
+    localStorage.setItem('bgMusicPlaying', 'true');
+  } else {
+    bgMusic.pause();
+    localStorage.setItem('bgMusicPlaying', 'false');
+  }
+});
+// Pause/resume on visibility change
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    if (!bgMusic.paused) bgMusic.pause();
+  } else {
+    const state = localStorage.getItem('bgMusicPlaying');
+    if (state === null || state === 'true') {
+      bgMusic.play().catch(() => {});
     }
-  });
-} 
+  }
+});

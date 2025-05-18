@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>Balloons</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -17,15 +20,22 @@
   </div>
   <button popovertarget="settingsPopover" id="settingsButton" title="Settings">⚙️</button>
   <div id="settingsPopover" popover class="popover-content">
-    <button id="bgMusicToggle" class="toggle-button" aria-pressed="false" title="Toggle Background Music">🔇</button>
+    <label class="music-toggle" title="Toggle Background Music">
+      <span class="icon">🔈</span>
+      <input type="checkbox" id="bgMusicToggle">
+      <span class="slider">
+        <span class="thumb"></span>
+      </span>
+      <span class="icon">🔊</span>
+    </label>
     <p>
       Music credits: <a href="https://freetouse.com/music/aylex/happy-day">Happy Day by Aylex</a>
       <br>
       Sound effects credits: <a href="https://pixabay.com/sound-effects/sharp-pop-328170/">Sharp Pop by CreatorsHome</a>
     </p>
   </div>
-  <audio id="bgMusic" src="Aylex - Happy Day (freetouse.com).mp3" loop preload="auto"></audio>
-  <audio id="popSound" src="sharp-pop-328170.mp3" preload="auto"></audio>
+  <audio id="bgMusic" src="assets/Aylex - Happy Day (freetouse.com).mp3" loop preload="auto"></audio>
+  <audio id="popSound" src="assets/sharp-pop-328170.mp3" preload="auto"></audio>
   <script src="script.js"></script>
 </body>
 </html> 

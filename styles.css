@@ -3,6 +3,8 @@ body, html {
   padding: 0;
   overflow: hidden;
   height: 100%;
+  overscroll-behavior: none;
+  touch-action: none;
 }
 
 .container {
@@ -144,14 +146,14 @@ body, html {
 /* Settings button */
 #settingsButton {
   position: fixed;
-  top: 16px;
-  right: 16px;
+  top: 1em;
+  right: 1em;
   z-index: 1000;
   background: white;
   border: none;
-  border-radius: 4px;
-  padding: 8px;
-  font-size: 18px;
+  border-radius: 0.25em;
+  padding: 0.5em;
+  font-size: larger;
   cursor: pointer;
 }
 
@@ -174,4 +176,40 @@ body, html {
 }
 .toggle-button:focus {
   outline: none;
+}
+
+/* Music toggle switch */
+.music-toggle {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+.music-toggle .icon {
+  font-size: x-large;
+}
+.music-toggle input {
+  visibility: hidden;
+  position: fixed;
+}
+.music-toggle .slider {
+  width: 5em;
+  margin-right: 0.5em;
+  background-color: #ccc;
+  transition: 0.4s;
+  height: 1.2em;
+  padding: 0.1em;
+  border-radius: 0.75em;
+}
+.slider .thumb {
+  display: inline-block;
+  background-color: white;
+  width: 1.2em;
+  height: 1.2em;
+  border-radius: 50%;
+}
+.music-toggle input:checked + .slider {
+  background-color: #2196F3;
+}
+.music-toggle input:checked + .slider .thumb {
+  transform: translateX(calc(3.7em + 1px));
 }
