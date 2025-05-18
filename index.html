@@ -15,7 +15,17 @@
     <div class="cloud" style="top: 58%; animation-duration: 180s; animation-delay: -300s;"></div>
     <div class="cloud" style="top: 70%; animation-duration: 100s; animation-delay: -50s;"></div>
   </div>
-  <audio id="popSound" src="pop.mp3" preload="auto"></audio>
+  <button popovertarget="settingsPopover" id="settingsButton" title="Settings">⚙️</button>
+  <div id="settingsPopover" popover class="popover-content">
+    <button id="bgMusicToggle" class="toggle-button" aria-pressed="false" title="Toggle Background Music">🔇</button>
+    <p>
+      Music credits: <a href="https://freetouse.com/music/aylex/happy-day">Happy Day by Aylex</a>
+      <br>
+      Sound effects credits: <a href="https://pixabay.com/sound-effects/sharp-pop-328170/">Sharp Pop by CreatorsHome</a>
+    </p>
+  </div>
+  <audio id="bgMusic" src="Aylex - Happy Day (freetouse.com).mp3" loop preload="auto"></audio>
+  <audio id="popSound" src="sharp-pop-328170.mp3" preload="auto"></audio>
   <script src="script.js"></script>
 </body>
 </html> 

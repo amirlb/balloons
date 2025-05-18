@@ -69,4 +69,26 @@ function spawnBalloon() {
 setInterval(spawnBalloon, 2000);
 
 // Initial balloon
-spawnBalloon(); 
+spawnBalloon();
+
+// Background music toggle button
+const bgMusic = document.getElementById('bgMusic');
+const bgToggleBtn = document.getElementById('bgMusicToggle');
+if (bgMusic && bgToggleBtn) {
+  const SOUND_ON = '🔊';
+  const SOUND_OFF = '🔇';
+  // Initialize button state
+  bgToggleBtn.textContent = bgMusic.paused ? SOUND_OFF : SOUND_ON;
+  bgToggleBtn.setAttribute('aria-pressed', (!bgMusic.paused).toString());
+  bgToggleBtn.addEventListener('click', () => {
+    if (bgMusic.paused) {
+      bgMusic.play();
+      bgToggleBtn.textContent = SOUND_ON;
+      bgToggleBtn.setAttribute('aria-pressed', 'true');
+    } else {
+      bgMusic.pause();
+      bgToggleBtn.textContent = SOUND_OFF;
+      bgToggleBtn.setAttribute('aria-pressed', 'false');
+    }
+  });
+} 
