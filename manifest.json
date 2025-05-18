@@ -1,0 +1,15 @@
+{
+  "name": "Balloons",
+  "short_name": "Balloons",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#87ceeb",
+  "theme_color": "#87ceeb",
+  "icons": [
+    {
+      "src": "assets/icon.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    }
+  ]
+} 
