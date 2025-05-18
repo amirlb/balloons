@@ -1,5 +1,5 @@
 const container = document.getElementById('container');
-const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink'];
+const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink', 'magenta', 'cyan', 'lime', 'turquoise', 'crimson', 'gold', 'hotpink', 'violet', 'teal', 'coral', 'fuchsia', 'limegreen', 'indigo', 'maroon'];
 
 function spawnBalloon() {
   const balloon = document.createElement('div');
@@ -66,7 +66,7 @@ function spawnBalloon() {
 }
 
 // Spawn a balloon every two seconds
-setInterval(spawnBalloon, 2000);
+let balloonInterval = setInterval(spawnBalloon, 2000);
 
 // Initial balloon
 spawnBalloon();
@@ -74,32 +74,25 @@ spawnBalloon();
 // Background music toggle switch
 const bgMusic = document.getElementById('bgMusic');
 const bgToggleInput = document.getElementById('bgMusicToggle');
-// Initialize from localStorage (default on)
-const stored = localStorage.getItem('bgMusicPlaying');
-const shouldPlay = stored === null || stored === 'true';
-bgToggleInput.checked = shouldPlay;
-if (shouldPlay) {
-  bgMusic.play().catch(() => {});
-} else {
-  bgMusic.pause();
-}
 // Toggle music on change
 bgToggleInput.addEventListener('change', () => {
   if (bgToggleInput.checked) {
     bgMusic.play();
-    localStorage.setItem('bgMusicPlaying', 'true');
   } else {
     bgMusic.pause();
-    localStorage.setItem('bgMusicPlaying', 'false');
   }
 });
 // Pause/resume on visibility change
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) {
+    clearInterval(balloonInterval);
+    balloonInterval = null;
     if (!bgMusic.paused) bgMusic.pause();
   } else {
-    const state = localStorage.getItem('bgMusicPlaying');
-    if (state === null || state === 'true') {
+    if (balloonInterval === null) {
+      balloonInterval = setInterval(spawnBalloon, 2000);
+    }
+    if (bgToggleInput.checked) {
       bgMusic.play().catch(() => {});
     }
   }
