@@ -162,16 +162,11 @@ body, html {
   border-radius: 0.5em;
   padding: 1em;
   min-width: 30vw;
-  min-height: 40vh;
+  min-height: 30vh;
 }
 .credits {
   margin: 1em 0;
   cursor: default;
-}
-.version {
-  position: absolute;
-  bottom: 1em;
-  font-size: smaller;
 }
 
 /* Music toggle switch */

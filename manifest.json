@@ -1,10 +1,9 @@
 {
   "name": "Balloons",
-  "short_name": "Balloons",
-  "start_url": ".",
+  "description": "Colorful balloon popping game",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#87ceeb",
-  "theme_color": "#87ceeb",
   "icons": [
     {
       "src": "assets/icon.png",
