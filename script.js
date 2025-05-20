@@ -47,7 +47,7 @@ function spawnBalloon() {
   });
 
   // Pop balloon only when clicking on actual SVG shapes
-  balloon.addEventListener('click', (e) => {
+  balloon.addEventListener('mouseup', (e) => {
     // Play pop sound
     const popSound = document.getElementById('popSound');
     if (popSound) {
