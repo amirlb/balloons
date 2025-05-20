@@ -10,5 +10,6 @@
       "sizes": "384x384",
       "type": "image/png"
     }
-  ]
+  ],
+  "orientation": "landscape"
 } 
