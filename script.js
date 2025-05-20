@@ -75,6 +75,9 @@ spawnBalloon();
 const bgMusic = document.getElementById('bgMusic');
 const bgToggleInput = document.getElementById('bgMusicToggle');
 // Toggle music on change
+bgMusic.play().then(() => {
+  bgToggleInput.checked = true;
+});
 bgToggleInput.addEventListener('change', () => {
   if (bgToggleInput.checked) {
     bgMusic.play();
