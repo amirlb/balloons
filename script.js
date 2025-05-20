@@ -46,24 +46,31 @@ function spawnBalloon() {
     balloon.remove();
   });
 
-  // Pop balloon only when clicking on actual SVG shapes
-  balloon.addEventListener('mouseup', (e) => {
-    // Play pop sound
-    const popSound = document.getElementById('popSound');
-    if (popSound) {
-      popSound.currentTime = 0;
-      popSound.play();
-    }
-    // Freeze current position by capturing bounding box and applying inline styles
-    const rect = balloon.getBoundingClientRect();
-    balloon.style.left = rect.left + 'px';
-    balloon.style.top = rect.top + 'px';
-    // Pop balloon
-    balloon.classList.add('pop');
-  });
-
   container.appendChild(balloon);
 }
+
+function popBalloon(balloon) {
+  // Play pop sound
+  const popSound = document.getElementById('popSound');
+  popSound.currentTime = 0;
+  popSound.play();
+  // Freeze current position by capturing bounding box and applying inline styles
+  const rect = balloon.getBoundingClientRect();
+  balloon.style.left = rect.left + 'px';
+  balloon.style.top = rect.top + 'px';
+  // Pop balloon
+  balloon.classList.add('pop');
+}
+
+// Pop balloon only when clicking on actual SVG shapes
+container.addEventListener('pointerup', (e) => {
+  for (const elt of document.elementsFromPoint(e.clientX, e.clientY)) {
+    if (elt.classList.contains('balloon')) {
+      popBalloon(elt);
+      return;
+    }
+  }
+});
 
 // Spawn a balloon every two seconds
 let balloonInterval = setInterval(spawnBalloon, 2000);
@@ -103,8 +110,5 @@ document.addEventListener('visibilitychange', () => {
 
 // Register service worker for PWA installability
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .catch(err => console.error('Service Worker registration failed:', err));
-  });
+  navigator.serviceWorker.register('/sw.js', {scope: '/baloons/'})
 }
