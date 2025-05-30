@@ -7,6 +7,23 @@ function spawnBalloon() {
 
   // Random color and position
   const color = colors[Math.floor(Math.random() * colors.length)];
+  
+  // 15% chance for special balloons
+  const isSpecial = Math.random() < 0.15;
+  let specialEmoji = '';
+  let specialType = '';
+  
+  if (isSpecial) {
+    if (Math.random() < 0.5) {
+      specialEmoji = '🌈';
+      specialType = 'rainbow';
+    } else {
+      specialEmoji = '🌧️';
+      specialType = 'rain';
+    }
+    balloon.dataset.specialType = specialType;
+  }
+  
   // Insert SVG balloon with cone knot, highlight, and wiggly string
   const scale = 0.7 + Math.random() * 0.3;
   balloon.innerHTML = `
@@ -21,17 +38,18 @@ function spawnBalloon() {
       </defs>
       <g transform="translate(${(scale-1) * 50}, ${(scale-1) * 150})">
         <!-- wiggly string -->
-        <path class="string" d="M50,150 C48,170 52,190 50,210 C48,230 52,250 50,270"/>
+        <path class="string" d="M60,150 C58,170 62,190 60,210 C58,230 62,250 60,270"/>
         <!-- knot -->
-        <path d="M 50,145 C 55,145,60,150,60,155 C 60,160,52,155,50,155 C 48,155,40,160,40,155 C 40,150,45,145,50,145" fill="${color}"/>
+        <path d="M 60,145 C 66,145,72,150,72,155 C 72,160,62,155,60,155 C 58,155,48,160,48,155 C 48,150,54,145,60,145" fill="${color}"/>
       </g>
       <g transform="scale(${scale})">
         <!-- balloon body -->
-        <path d="M 50,150 C 60,150,95,120,95,70 A 45,65,0,0,0,5,70 C 5,120,40,150,50,150" fill="${color}"/>
+        <path d="M 60,150 C 72,150,114,120,114,70 A 54,65,0,0,0,6,70 C 6,120,48,150,60,150" fill="${color}"/>
         <!-- highlight -->
-        <ellipse class="highlight" cx="45" cy="60" rx="35" ry="50" fill="url(#hl)"/>
+        <ellipse class="highlight" cx="54" cy="60" rx="42" ry="50" fill="url(#hl)"/>
       </g>
-    </svg>`;
+    </svg>
+    ${specialEmoji ? `<div class="special-emoji" style="top: ${scale*50}%; left: ${scale*60}%">${specialEmoji}</div>` : ''}`;
   // width is auto to maintain SVG aspect ratio and be responsive
   // Random vertical position within viewport
   const y = 5 + Math.random() * 50;
@@ -39,7 +57,8 @@ function spawnBalloon() {
 
   // Random animation duration (slower)
   const duration = 20 + Math.random() * 20; // seconds
-  balloon.style.animationDuration = duration + 's';
+  const wiggleDuration = 2 + Math.random() * 2; // seconds for wiggle
+  balloon.style.animationDuration = duration + 's, ' + wiggleDuration + 's, 0.3s';
 
   // Remove balloon after it floats off screen
   balloon.addEventListener('animationend', () => {
@@ -49,23 +68,101 @@ function spawnBalloon() {
   container.appendChild(balloon);
 }
 
+function createRainbowStreak() {
+  // Pause all balloon animations
+  pauseBalloonAnimations();
+  
+  const rainbow = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  rainbow.setAttribute("viewBox", "0 0 100 40");
+  rainbow.innerHTML = `
+    <path class="rainbow-stroke" stroke="#70369d" d="M 11 32 A 70 70 0 0 1 89 32"/>
+    <path class="rainbow-stroke" stroke="#4b369d" d="M 10 29 A 75 75 0 0 1 90 29"/>
+    <path class="rainbow-stroke" stroke="#487de7" d="M 9 26 A 80 80 0 0 1 91 26"/>
+    <path class="rainbow-stroke" stroke="#79c314" d="M 8 23 A 85 85 0 0 1 92 23"/>
+    <path class="rainbow-stroke" stroke="#faeb36" d="M 7 20 A 90 90 0 0 1 93 20"/>
+    <path class="rainbow-stroke" stroke="#ffa500" d="M 6 17 A 95 95 0 0 1 94 17"/>
+    <path class="rainbow-stroke" stroke="#e81416" d="M 5 14 A 100 100 0 0 1 95 14"/>
+  `;
+  rainbow.classList.add('rainbow');
+  container.appendChild(rainbow);
+  
+  setTimeout(() => {
+    rainbow.remove();
+    // Resume balloon animations after effect
+    resumeBalloonAnimations();
+  }, 3000);
+}
+
+function createRainEffect() {
+  // Pause all balloon animations
+  pauseBalloonAnimations();
+  
+  const rainContainer = document.createElement('div');
+  rainContainer.classList.add('rain-effect');
+  
+  for (let i = 0; i < 200; i++) {
+    const drop = document.createElement('div');
+    drop.classList.add('rain-drop');
+    drop.style.left = Math.random() * 100 + 'vw';
+    drop.style.top = Math.random() * -100 - 50 + 'px';
+    drop.style.animationDelay = Math.random() * 1500 + 'ms';
+    drop.style.animationDuration = (1000 + Math.random() * 600) + 'ms';
+    rainContainer.appendChild(drop);
+  }
+  
+  container.appendChild(rainContainer);
+  
+  setTimeout(() => {
+    rainContainer.remove();
+    // Resume balloon animations after effect
+    resumeBalloonAnimations();
+  }, 3000);
+}
+
 function popBalloon(balloon) {
   // Play pop sound
   const popSound = document.getElementById('popSound');
   popSound.currentTime = 0;
   popSound.play();
-  // Freeze current position by capturing bounding box and applying inline styles
-  const rect = balloon.getBoundingClientRect();
-  balloon.style.left = rect.left + 'px';
-  balloon.style.top = rect.top + 'px';
+
+  // Check if this balloon has special effects
+  if (balloon.dataset.specialType === 'rainbow') {
+    createRainbowStreak();
+  } else if (balloon.dataset.specialType === 'rain') {
+    createRainEffect();
+  }
+
   // Pop balloon
   balloon.classList.add('pop');
 }
 
+function pauseBalloonAnimations() {
+  document.getElementById('container').classList.add('sfx');
+
+  // Pause balloon creation
+  if (balloonInterval) {
+    clearInterval(balloonInterval);
+    balloonInterval = null;
+  }
+}
+
+function resumeBalloonAnimations() {
+  document.getElementById('container').classList.remove('sfx');
+
+  // Resume balloon creation
+  if (!balloonInterval) {
+    balloonInterval = setInterval(spawnBalloon, 2000);
+  }
+}
+
 // Pop balloon only when clicking on actual SVG shapes
 container.addEventListener('pointerup', (e) => {
+  let onPath = false;
   for (const elt of document.elementsFromPoint(e.clientX, e.clientY)) {
-    if (elt.classList.contains('balloon')) {
+    if (elt.tagName == 'path') {
+      onPath = true;
+    }
+    if (elt.classList.contains('balloon') && onPath) {
       popBalloon(elt);
       return;
     }

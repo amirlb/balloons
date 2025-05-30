@@ -11,7 +11,7 @@ body, html {
   position: relative;
   width: 100%;
   height: 100%;
-  background: #87ceeb; /* skyblue */
+  background: #87ceeb;
   overflow: hidden;
 }
 
@@ -58,9 +58,16 @@ body, html {
   display: inline-block;
   left: 102vw;
   height: 30vh;
-  animation-name: drift-sideways;
-  animation-timing-function: linear;
-  animation-fill-mode: forwards;
+  animation-name: drift-sideways, wiggle, pop;
+  animation-timing-function: linear, ease-in-out, linear;
+  animation-iteration-count: 1, infinite, 1;
+  animation-fill-mode: forwards, none, forwards;
+  animation-direction: normal, alternate, normal;
+  animation-play-state: running, running, paused;
+  animation-composition: add;
+}
+.container.sfx .balloon {
+  animation-play-state: paused, running, paused;
 }
 
 .balloon svg {
@@ -68,11 +75,27 @@ body, html {
   height: 100%;
   display: block;
   overflow: visible;
-  /* TODO: fix path coords instead of scaling */
-  transform: scaleX(1.2);
-  transform-origin: 50% 0;
   g {
     cursor: pointer;
+  }
+}
+
+.special-emoji {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-size: 2.5em;
+  pointer-events: none;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+  filter: drop-shadow(0 0 3px rgba(255,255,255,0.8));
+  animation: emoji-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes emoji-glow {
+  0% {
+    filter: drop-shadow(0 0 3px rgba(255,255,255,0.8));
+  }
+  100% {
+    filter: drop-shadow(0 0 8px rgba(255,255,255,1));
   }
 }
 
@@ -91,7 +114,11 @@ body, html {
   }
 }
 
-/* Varied cloud sizes */
+@keyframes wiggle {
+  0% { transform: translateY(-2vh); }
+  100% { transform: translateY(2vh); }
+}
+
 .container .cloud:nth-of-type(1) {
   width: 300px;
   height: 100px;
@@ -105,16 +132,12 @@ body, html {
   height: 120px;
 }
 
-/* removed pseudo-element string; using embedded SVG string instead */
-
-/* Add SVG string styles */
 .balloon svg path.string {
   fill: none;
   stroke: black;
   stroke-width: 1.5px;
 }
 
-/* Pop animation */
 @keyframes pop {
   0% {
     transform: scale(1);
@@ -131,17 +154,14 @@ body, html {
 }
 
 .balloon.pop {
-  animation-name: pop;
-  animation-duration: 0.3s !important;
-  animation-timing-function: linear;
-  animation-fill-mode: forwards;
+  animation-play-state: paused, paused, running !important;
+  opacity: 0;
 }
 .balloon.pop svg path {
   stroke-opacity: 0;
   transition-duration: 0.2s;
 }
 
-/* Settings button */
 #settingsButton {
   position: fixed;
   top: 1em;
@@ -155,7 +175,6 @@ body, html {
   cursor: pointer;
 }
 
-/* Popover content styling */
 .popover-content {
   background: white;
   border: 1px solid #ccc;
@@ -169,7 +188,6 @@ body, html {
   cursor: default;
 }
 
-/* Music toggle switch */
 .music-toggle {
   display: flex;
   align-items: center;
@@ -206,4 +224,67 @@ body, html {
 }
 .music-toggle input:checked + .slider .thumb {
   transform: translateX(calc(3.7em + 1px));
+}
+
+.rainbow {
+  position: fixed;
+  top: 10vh;
+  left: 10vw;
+  width: 80vw;
+}
+
+.rainbow-stroke {
+  fill: none;
+  stroke-width: 3.5;
+  stroke-dasharray: 100 120;
+  stroke-dashoffset: 0;
+  stroke-linecap: round;
+  filter: blur(0.5px);
+  animation: rainbow-streak 3s ease-in-out;
+}
+
+@keyframes rainbow-streak {
+  0% { stroke-dashoffset: -100; }
+  25%, 75% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: 120; }
+}
+
+.rain-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.rain-drop {
+  position: absolute;
+  width: 12px;
+  height: 35px;
+  background: linear-gradient(to bottom, 
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(173, 216, 230, 0.95) 30%,
+    rgba(100, 149, 237, 0.8) 100%);
+  border-radius: 0 0 6px 6px;
+  box-shadow: 
+    0 0 10px rgba(255, 255, 255, 0.6),
+    0 0 20px rgba(135, 206, 235, 0.5),
+    inset 0 0 5px rgba(255, 255, 255, 0.7);
+  animation: rain-fall linear forwards;
+}
+
+@keyframes rain-fall {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  95% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(calc(100vh + 50px));
+    opacity: 0;
+  }
 }
