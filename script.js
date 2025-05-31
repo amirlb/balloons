@@ -3,7 +3,8 @@ const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink', 'm
 const shapes = {
   circle: "M 60,150 C 72,150,114,120,114,70 A 54,65,0,0,0,6,70 C 6,120,48,150,60,150",
   square: "M 60,150 C 120,150,114,150,114,70 C 114,5,120,5,60,5 C 0,5,6,5,6,70 C 6,150,0,150,60,150",
-  diamond: "M 60,150 C 72,150,114,75,114,70 C 114,65,65,5,60,5 C 55,5,6,65,6,70 C 6,75,58,150,60,150",
+  diamond: "M 60,150 C 70,150,114,90,114,75 C 114,60,70,5,60,5 C 50,5,6,60,6,75 C 6,90,50,150,60,150",
+  pentagon: "M 60,150 C 70,150,114,95,114,80 C 114,65,103,16,95,10 C 87,4,33,4,25,10 C 17,16,6,65,6,80 C 6,95,50,150,60,150",
 };
 
 let balloonShape = 'circle';
@@ -22,21 +23,24 @@ function spawnBalloon() {
   
   if (isSpecial) {
     const rand = Math.random();
-    if (rand < 0.2) {
+    if (rand < 0.25) {
       specialEmoji = '🌈';
       specialType = 'rainbow';
-    } else if (rand < 0.4) {
+    } else if (rand < 0.5) {
       specialEmoji = '🌧️';
       specialType = 'rain';
-    } else if (rand < 0.6) {
+    } else if (rand < 0.65) {
       specialEmoji = '🔴';
       specialType = 'circle';
     } else if (rand < 0.8) {
       specialEmoji = '◼️';
       specialType = 'square';
-    } else {
+    } else if (rand < 0.9) {
       specialEmoji = '♦️';
       specialType = 'diamond';
+    } else {
+      specialEmoji = '⬟';
+      specialType = 'pentagon';
     }
   balloon.dataset.specialType = specialType;
   }
@@ -172,6 +176,8 @@ function popBalloon(balloon) {
     createShapeChangeEffect('◼️', 'square');
   } else if (balloon.dataset.specialType === 'diamond') {
     createShapeChangeEffect('♦️', 'diamond');
+  } else if (balloon.dataset.specialType === 'pentagon') {
+    createShapeChangeEffect('⬟', 'pentagon');
   }
 
   // Pop balloon
