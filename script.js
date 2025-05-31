@@ -1,5 +1,12 @@
 const container = document.getElementById('container');
 const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink', 'magenta', 'cyan', 'lime', 'turquoise', 'crimson', 'gold', 'hotpink', 'violet', 'teal', 'coral', 'fuchsia', 'limegreen', 'indigo', 'maroon'];
+const shapes = {
+  circle: "M 60,150 C 72,150,114,120,114,70 A 54,65,0,0,0,6,70 C 6,120,48,150,60,150",
+  square: "M 60,150 C 120,150,114,150,114,70 C 114,5,120,5,60,5 C 0,5,6,5,6,70 C 6,150,0,150,60,150",
+  diamond: "M 60,150 C 72,150,114,75,114,70 C 114,65,65,5,60,5 C 55,5,6,65,6,70 C 6,75,58,150,60,150",
+};
+
+let balloonShape = 'circle';
 
 function spawnBalloon() {
   const balloon = document.createElement('div');
@@ -14,14 +21,24 @@ function spawnBalloon() {
   let specialType = '';
   
   if (isSpecial) {
-    if (Math.random() < 0.5) {
+    const rand = Math.random();
+    if (rand < 0.2) {
       specialEmoji = '🌈';
       specialType = 'rainbow';
-    } else {
+    } else if (rand < 0.4) {
       specialEmoji = '🌧️';
       specialType = 'rain';
+    } else if (rand < 0.6) {
+      specialEmoji = '🔴';
+      specialType = 'circle';
+    } else if (rand < 0.8) {
+      specialEmoji = '◼️';
+      specialType = 'square';
+    } else {
+      specialEmoji = '♦️';
+      specialType = 'diamond';
     }
-    balloon.dataset.specialType = specialType;
+  balloon.dataset.specialType = specialType;
   }
   
   // Insert SVG balloon with cone knot, highlight, and wiggly string
@@ -44,7 +61,7 @@ function spawnBalloon() {
       </g>
       <g transform="scale(${scale})">
         <!-- balloon body -->
-        <path d="M 60,150 C 72,150,114,120,114,70 A 54,65,0,0,0,6,70 C 6,120,48,150,60,150" fill="${color}"/>
+        <path d="${shapes[balloonShape]}" fill="${color}"/>
         <!-- highlight -->
         <ellipse class="highlight" cx="54" cy="60" rx="42" ry="50" fill="url(#hl)"/>
       </g>
@@ -75,26 +92,24 @@ function createRainbowStreak() {
   const rainbow = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   rainbow.setAttribute("viewBox", "0 0 100 40");
   rainbow.innerHTML = `
-    <path class="rainbow-stroke" stroke="#70369d" d="M 11 32 A 70 70 0 0 1 89 32"/>
-    <path class="rainbow-stroke" stroke="#4b369d" d="M 10 29 A 75 75 0 0 1 90 29"/>
-    <path class="rainbow-stroke" stroke="#487de7" d="M 9 26 A 80 80 0 0 1 91 26"/>
-    <path class="rainbow-stroke" stroke="#79c314" d="M 8 23 A 85 85 0 0 1 92 23"/>
-    <path class="rainbow-stroke" stroke="#faeb36" d="M 7 20 A 90 90 0 0 1 93 20"/>
-    <path class="rainbow-stroke" stroke="#ffa500" d="M 6 17 A 95 95 0 0 1 94 17"/>
-    <path class="rainbow-stroke" stroke="#e81416" d="M 5 14 A 100 100 0 0 1 95 14"/>
+    <path class="rainbow-stroke" stroke="#70369D" d="M 11 32 A 70 70 0 0 1 89 32"/>
+    <path class="rainbow-stroke" stroke="#4B369D" d="M 10 29 A 75 75 0 0 1 90 29"/>
+    <path class="rainbow-stroke" stroke="#487DE7" d="M 9 26 A 80 80 0 0 1 91 26"/>
+    <path class="rainbow-stroke" stroke="#79C314" d="M 8 23 A 85 85 0 0 1 92 23"/>
+    <path class="rainbow-stroke" stroke="#FAEB36" d="M 7 20 A 90 90 0 0 1 93 20"/>
+    <path class="rainbow-stroke" stroke="#FFA500" d="M 6 17 A 95 95 0 0 1 94 17"/>
+    <path class="rainbow-stroke" stroke="#E81416" d="M 5 14 A 100 100 0 0 1 95 14"/>
   `;
   rainbow.classList.add('rainbow');
   container.appendChild(rainbow);
   
   setTimeout(() => {
     rainbow.remove();
-    // Resume balloon animations after effect
     resumeBalloonAnimations();
   }, 3000);
 }
 
 function createRainEffect() {
-  // Pause all balloon animations
   pauseBalloonAnimations();
   
   const rainContainer = document.createElement('div');
@@ -114,9 +129,30 @@ function createRainEffect() {
   
   setTimeout(() => {
     rainContainer.remove();
-    // Resume balloon animations after effect
     resumeBalloonAnimations();
   }, 3000);
+}
+
+function createShapeChangeEffect(emoji, newShape) {
+  pauseBalloonAnimations();
+  
+  const effectContainer = document.createElement('div');
+  effectContainer.classList.add('shape-change-effect');
+  effectContainer.innerHTML = `
+    <div class="fullscreen-emoji">
+      <div class="emoji-shine">
+        ${emoji}
+      </div>
+    </div>
+  `;
+  
+  container.appendChild(effectContainer);
+  
+  setTimeout(() => {
+    balloonShape = newShape;
+    effectContainer.remove();
+    resumeBalloonAnimations();
+  }, 2000);
 }
 
 function popBalloon(balloon) {
@@ -130,6 +166,12 @@ function popBalloon(balloon) {
     createRainbowStreak();
   } else if (balloon.dataset.specialType === 'rain') {
     createRainEffect();
+  } else if (balloon.dataset.specialType === 'circle') {
+    createShapeChangeEffect('🔴', 'circle');
+  } else if (balloon.dataset.specialType === 'square') {
+    createShapeChangeEffect('◼️', 'square');
+  } else if (balloon.dataset.specialType === 'diamond') {
+    createShapeChangeEffect('♦️', 'diamond');
   }
 
   // Pop balloon
