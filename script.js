@@ -16,8 +16,8 @@ function spawnBalloon() {
   // Random color and position
   const color = colors[Math.floor(Math.random() * colors.length)];
   
-  // 15% chance for special balloons
-  const isSpecial = Math.random() < 0.15;
+  // 20% chance for special balloons
+  const isSpecial = Math.random() < 0.2;
   let specialEmoji = '';
   let specialType = '';
   
