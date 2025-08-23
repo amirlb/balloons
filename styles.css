@@ -338,3 +338,40 @@ body, html {
     filter: brightness(1) drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
   }
 }
+
+.fireworks-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 75;
+}
+
+.firework-spark {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  animation: firework-burst 2s ease-out forwards;
+}
+
+@keyframes firework-burst {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  20% {
+    transform: translate(calc(var(--endX) * 0.3), calc(var(--endY) * 0.3)) scale(1.2);
+    opacity: 1;
+  }
+  60% {
+    transform: translate(calc(var(--endX) * 0.8), calc(var(--endY) * 0.8)) scale(0.8);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(var(--endX), var(--endY)) scale(0.3);
+    opacity: 0;
+  }
+}

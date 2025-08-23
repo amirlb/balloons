@@ -25,13 +25,16 @@ function spawnBalloon() {
   
   if (isSpecial) {
     const rand = Math.random();
-    if (rand < 0.25) {
+    if (rand < 0.2) {
       specialEmoji = '🌈';
       specialType = 'rainbow';
-    } else if (rand < 0.5) {
+    } else if (rand < 0.4) {
       specialEmoji = '🌧️';
       specialType = 'rain';
-    } else if (rand < 0.65) {
+    } else if (rand < 0.55) {
+      specialEmoji = '🎆';
+      specialType = 'fireworks';
+    } else if (rand < 0.7) {
       specialEmoji = '🔴';
       specialType = 'circle';
     } else if (rand < 0.8) {
@@ -139,6 +142,53 @@ function createRainEffect() {
   }, 3000);
 }
 
+function createFireworksEffect() {
+  pauseBalloonAnimations();
+  
+  const fireworksContainer = document.createElement('div');
+  fireworksContainer.classList.add('fireworks-effect');
+  
+  const colors = ['#FFD700', '#FF4500', '#FF1493', '#00CED1', '#32CD32', '#9400D3', '#FFFFFF'];
+  const burstCount = 5;
+  
+  for (let burst = 0; burst < burstCount; burst++) {
+    setTimeout(() => {
+      const burstX = 20 + Math.random() * 60; // 20-80% across screen
+      const burstY = 20 + Math.random() * 60; // 20-80% down screen
+      const sparkCount = 18;
+      
+      for (let i = 0; i < sparkCount; i++) {
+        const spark = document.createElement('div');
+        spark.classList.add('firework-spark');
+        
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const angle = (i / sparkCount) * 2 * Math.PI;
+        // const distance = 100 + Math.random() * 150;
+        const distance = (0.2 + Math.random() * 0.1) * window.innerWidth;
+        const endX = Math.cos(angle) * distance;
+        const endY = Math.sin(angle) * distance;
+        
+        spark.style.left = `${burstX}%`;
+        spark.style.top = `${burstY}%`;
+        spark.style.backgroundColor = color;
+        spark.style.boxShadow = `0 0 6px ${color}`;
+        spark.style.setProperty('--endX', `${endX}px`);
+        spark.style.setProperty('--endY', `${endY}px`);
+        spark.style.animationDelay = `${Math.random() * 0.1}s`;
+        
+        fireworksContainer.appendChild(spark);
+      }
+    }, burst * 400);
+  }
+  
+  container.appendChild(fireworksContainer);
+  
+  setTimeout(() => {
+    fireworksContainer.remove();
+    resumeBalloonAnimations();
+  }, 3000);
+}
+
 function createShapeChangeEffect(emoji, newShape) {
   pauseBalloonAnimations();
   
@@ -172,6 +222,8 @@ function popBalloon(balloon) {
     createRainbowStreak();
   } else if (balloon.dataset.specialType === 'rain') {
     createRainEffect();
+  } else if (balloon.dataset.specialType === 'fireworks') {
+    createFireworksEffect();
   } else if (balloon.dataset.specialType === 'circle') {
     createShapeChangeEffect('🔴', 'circle');
   } else if (balloon.dataset.specialType === 'square') {
