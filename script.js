@@ -1,3 +1,5 @@
+const BALLOON_INTERVAL_MS = 1500;
+
 const container = document.getElementById('container');
 const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink', 'magenta', 'cyan', 'lime', 'turquoise', 'crimson', 'gold', 'hotpink', 'violet', 'teal', 'coral', 'fuchsia', 'limegreen', 'indigo', 'maroon'];
 const shapes = {
@@ -16,8 +18,8 @@ function spawnBalloon() {
   // Random color and position
   const color = colors[Math.floor(Math.random() * colors.length)];
   
-  // 15% chance for special balloons
-  const isSpecial = Math.random() < 0.15;
+  // 25% chance for special balloons
+  const isSpecial = Math.random() < 0.25;
   let specialEmoji = '';
   let specialType = '';
   
@@ -77,8 +79,8 @@ function spawnBalloon() {
   balloon.style.top = y + 'vh';
 
   // Random animation duration (slower)
-  const duration = 20 + Math.random() * 20; // seconds
-  const wiggleDuration = 2 + Math.random() * 2; // seconds for wiggle
+  const duration = 10 + Math.random() * 15; // seconds
+  const wiggleDuration = 1 + Math.random() * 2; // seconds for wiggle
   balloon.style.animationDuration = duration + 's, ' + wiggleDuration + 's, 0.3s';
 
   // Remove balloon after it floats off screen
@@ -156,7 +158,7 @@ function createShapeChangeEffect(emoji, newShape) {
     balloonShape = newShape;
     effectContainer.remove();
     resumeBalloonAnimations();
-  }, 2000);
+  }, BALLOON_INTERVAL_MS);
 }
 
 function popBalloon(balloon) {
@@ -199,7 +201,7 @@ function resumeBalloonAnimations() {
 
   // Resume balloon creation
   if (!balloonInterval) {
-    balloonInterval = setInterval(spawnBalloon, 2000);
+    balloonInterval = setInterval(spawnBalloon, BALLOON_INTERVAL_MS);
   }
 }
 
@@ -217,8 +219,7 @@ container.addEventListener('pointerup', (e) => {
   }
 });
 
-// Spawn a balloon every two seconds
-let balloonInterval = setInterval(spawnBalloon, 2000);
+let balloonInterval = setInterval(spawnBalloon, BALLOON_INTERVAL_MS);
 
 // Initial balloon
 spawnBalloon();
@@ -245,7 +246,7 @@ document.addEventListener('visibilitychange', () => {
     if (!bgMusic.paused) bgMusic.pause();
   } else {
     if (balloonInterval === null) {
-      balloonInterval = setInterval(spawnBalloon, 2000);
+      balloonInterval = setInterval(spawnBalloon, BALLOON_INTERVAL_MS);
     }
     if (bgToggleInput.checked) {
       bgMusic.play().catch(() => {});
